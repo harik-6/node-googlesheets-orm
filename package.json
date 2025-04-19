@@ -1,0 +1,19 @@
+{
+    "name": "node-googlesheets-orm",
+    "version": "0.0.1",
+    "main": "./lib/",
+    "author": "harik-6",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+      "test": "node client.js"
+    },
+    "dependencies": {
+      "google-spreadsheet": "^4.1.4",
+      "validator": "^13.15.0"
+    },
+    "devDependencies": {
+      "google-auth-library": "^9.15.1"
+    }
+  }
+  
