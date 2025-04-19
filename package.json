@@ -6,7 +6,7 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-      "test": "node client.js"
+      "test": "node test.js"
     },
     "dependencies": {
       "google-spreadsheet": "^4.1.4",
