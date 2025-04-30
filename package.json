@@ -1,12 +1,17 @@
 {
     "name": "node-googlesheets-orm",
-    "version": "0.0.1",
+    "version": "1.0.0",
+    "description": "NodeJs package for ORM like library for Google sheets integration",
     "main": "./lib/",
     "author": "harik-6",
     "license": "MIT",
     "private": false,
     "scripts": {
-      "test": "node client.js"
+      "test": "exit 0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/harik-6/node-googlesheets-orm.git"
     },
     "dependencies": {
       "google-spreadsheet": "^4.1.4",
