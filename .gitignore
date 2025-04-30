@@ -137,3 +137,4 @@ dist
 .qodo
 test.js
 client.js
+client.json
