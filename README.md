@@ -6,9 +6,10 @@ A simple and intuitive ORM (Object-Relational Mapping) library for Google Sheets
 
 - Easy-to-use ORM interface for Google Sheets
 - Support for data types (String, Number)
-- Relationship mapping (One-to-One)
 - Async/await support
 - Type validation
+- Built-in validators for data integrity
+- Automatic sheet creation for new models
 
 ## Installation
 
@@ -52,52 +53,43 @@ await sheet.init();
 
 ### 3. Define Models
 
-Models represent sheets in your Google Spreadsheet. Each model maps to a specific sheet.
+Models represent sheets in your Google Spreadsheet. Each model maps to a specific sheet. If a sheet with the specified name doesn't exist, it will be automatically created.
 
 ```javascript
 const DATATYPES = require('node-googlesheets-orm/lib/data-types');
 
 const Employee = sheet.defineModel({
     id: {
-        type: DATATYPES.NUMBER
+        type: DATATYPES.NUMBER,
+        validate: {
+            notNull: true,
+            isNumeric: true
+        }
     },
     name: {
-        type: DATATYPES.STRING
-    }
-}, {
-    name: 'employees' // This should match your sheet name
-});
-
-const Role = sheet.defineModel({
-    id: {
-        type: DATATYPES.NUMBER
+        type: DATATYPES.STRING,
+        validate: {
+            notNull: true,
+            len: [2, 50] // Length between 2 and 50 characters
+        }
     },
-    role: {
-        type: DATATYPES.STRING
+    email: {
+        type: DATATYPES.STRING,
+        validate: {
+            isEmail: true
+        }
     }
 }, {
-    name: 'roles' // This should match your sheet name
+    name: 'employees' // If 'employees' sheet doesn't exist, it will be created automatically
 });
 ```
 
-### 4. Define Relationships
-
-You can define relationships between your models:
-
-```javascript
-// Define a one-to-one relationship between Employee and Role
-Employee.oneToOne(Role);
-```
-
-### 5. Query Data
+### 4. Query Data
 
 ```javascript
 // Fetch all employees
 const allEmployees = await Employee.findAll();
 console.log(allEmployees);
-
-// Access related data
-console.log(allEmployees[0].roles); // Access the related role for the first employee
 ```
 
 ## Data Types
@@ -105,6 +97,30 @@ console.log(allEmployees[0].roles); // Access the related role for the first emp
 The library supports the following data types:
 - `DATATYPES.STRING`: For text values
 - `DATATYPES.NUMBER`: For numeric values
+
+## Validators
+
+The library provides several built-in validators to ensure data integrity:
+
+- `notNull`: Ensures the field cannot be null or empty
+- `isNumeric`: Validates that the value is numeric
+- `isEmail`: Validates that the value is a valid email address
+- `isAlphanumeric`: Validates that the value contains only letters and numbers
+- `len`: Validates the length of a string (takes an array with min and max values)
+
+Example usage of validators:
+```javascript
+{
+    fieldName: {
+        type: DATATYPES.STRING,
+        validate: {
+            notNull: true,
+            isEmail: true,
+            len: [5, 100]
+        }
+    }
+}
+```
 
 ## API Reference
 
@@ -125,7 +141,6 @@ new SheetORM({
 ### Model Methods
 
 - `findAll()`: Retrieves all records for the model
-- `oneToOne(relatedModel)`: Defines a one-to-one relationship with another model
 
 ## Error Handling
 
@@ -134,17 +149,12 @@ The library includes validation and error handling for:
 - Missing or invalid service account credentials
 - Non-existent sheet names
 - Invalid data types
+- Validation errors for fields
 
 ## Limitations
 
 - Currently supports only STRING and NUMBER data types
-- One-to-One relationships only
-- Sheets must exist in the Google Spreadsheet before defining models
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-[Add your license information here]
