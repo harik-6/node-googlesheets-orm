@@ -43,7 +43,7 @@ const serviceAccountAuth = new JWT({
 ```javascript
 const SheetORM = require('node-googlesheets-orm');
 
-const sheet = new SheetORM({
+const sheet = async new SheetORM({
     sheetId: 'your-google-sheet-id',
     serviceAccount: serviceAccountAuth
 });
