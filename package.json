@@ -1,6 +1,6 @@
 {
     "name": "node-googlesheets-orm",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "NodeJs package for ORM like library for Google sheets integration",
     "main": "./lib/",
     "author": "harik-6",
