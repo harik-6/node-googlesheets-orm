@@ -11,6 +11,7 @@ A simple and intuitive ORM (Object-Relational Mapping) library for Google Sheets
 - Built-in validators for data integrity
 - Automatic sheet creation for new models
 - Row-based CRUD operations with automatic ID management
+- Filtering records with the `where()` function based on field values
 
 ## Installation
 
@@ -160,6 +161,17 @@ console.log(allEmployees);
 // Find employee by ID (row number)
 const employee = await Employee.findById(3);
 console.log(employee);
+
+// Find employees using where() to filter by field values
+const highPaidEmployees = await Employee.where({ salary: 80000 });
+console.log(highPaidEmployees); // Returns all employees with salary of 80000
+
+// You can filter by multiple fields
+const specificEmployee = await Employee.where({
+    name: 'John Smith',
+    email: 'john.smith@example.com'
+});
+console.log(specificEmployee); // Returns employees matching both conditions
 ```
 
 #### Update Records
@@ -233,6 +245,7 @@ new SheetORM({
 - `findById(id)`: Retrieves a specific record by its row number
 - `create(data)`: Creates a new record
 - `update(data)`: Updates an existing record (requires `_id` field)
+- `where(whereObject)`: Filters records based on matching field values
 
 ## Error Handling
 
