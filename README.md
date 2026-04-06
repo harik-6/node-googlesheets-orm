@@ -12,6 +12,8 @@ A simple and intuitive ORM (Object-Relational Mapping) library for Google Sheets
 - Automatic sheet creation for new models
 - Row-based CRUD operations with automatic ID management
 - Filtering records with the `where()` function based on field values
+- Limit results with `limit()` to fetch only the first N records
+- Sort results with `orderBy()` in ascending or descending order
 
 ## Installation
 
@@ -116,7 +118,7 @@ const Employee = await sheet.defineModel({
         type: DATATYPES.STRING,
         validate: {
             notNull: true,
-            len: [2, 50] // Length between 2 and 50 characters
+            len: [2, 50] // Length must be greater than 2 and less than 50 characters (exclusive)
         }
     },
     email: {
@@ -172,6 +174,15 @@ const specificEmployee = await Employee.where({
     email: 'john.smith@example.com'
 });
 console.log(specificEmployee); // Returns employees matching both conditions
+
+// Limit the number of records returned
+const firstFive = await Employee.limit(5);
+console.log(firstFive); // Returns the first 5 employees
+
+// Sort records by a field
+const byNameAsc = await Employee.orderBy('name');           // ascending (default)
+const bySalaryDesc = await Employee.orderBy('salary', 'DESC'); // descending
+console.log(bySalaryDesc); // Returns employees sorted by salary, highest first
 ```
 
 #### Update Records
@@ -207,7 +218,7 @@ The library provides several built-in validators to ensure data integrity:
 - `isNumeric`: Validates that the value is numeric
 - `isEmail`: Validates that the value is a valid email address
 - `isAlphanumeric`: Validates that the value contains only letters and numbers
-- `len`: Validates the length of a string (takes an array with min and max values)
+- `len`: Validates the length of a string (takes an array `[min, max]` — length must be greater than min and less than max, exclusive)
 
 Example usage of validators:
 ```javascript
@@ -245,16 +256,20 @@ new SheetORM({
 - `findById(id)`: Retrieves a specific record by its row number
 - `create(data)`: Creates a new record
 - `update(data)`: Updates an existing record (requires `_id` field)
-- `where(whereObject)`: Filters records based on matching field values
+- `where(whereObject)`: Filters records by field values (comparison is string-coerced, so numeric and string values match)
+- `limit(count)`: Returns the first N records
+- `orderBy(field, direction)`: Sorts records by a field; `direction` is `'ASC'` (default) or `'DESC'`
+- `getName()`: Returns the name of the sheet this model is bound to
 
 ## Error Handling
 
 The library includes validation and error handling for:
 - Missing or invalid sheet IDs
 - Missing or invalid service account credentials
-- Non-existent sheet names
 - Invalid data types
 - Validation errors for fields
+
+> **Note:** If a sheet with the given model name does not exist, it is automatically created — no error is thrown.
 
 ## Limitations
 
